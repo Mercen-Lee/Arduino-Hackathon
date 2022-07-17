@@ -20,6 +20,11 @@ void setup() {
     pinMode(LEDS[i], OUTPUT);
     digitalWrite(LEDS[i], HIGH);
   }
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("LONDON");
+  lcd.setCursor(0, 1);
+  lcd.print("81 DAYS LEFT");
 }
 
 void loop() {
@@ -135,17 +140,57 @@ void loop() {
         SELECTED = i;
         ARRIVED[i] = 1;
         digitalWrite(LEDS[i], LOW);
-        Serial.println(DAYS);
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        switch(i) {
+          case 0: { lcd.print("LONDON"); break; }
+          case 1: { lcd.print("SUEZ"); break; }
+          case 2: { lcd.print("BOMBAY"); break; }
+          case 3: { lcd.print("CALCUTTA"); break; }
+          case 4: { lcd.print("HONG KONG"); break; }
+          case 5: { lcd.print("YOKOHAMA"); break; }
+          case 6: { lcd.print("SAN FRANCISCO"); break; }
+          case 7: { lcd.print("NEW YORK"); break; }
+        }
+        Serial.println(i);
+        lcd.setCursor(0, 1);
+        if(DAYS < 0) {
+          lcd.print(-DAYS);
+          lcd.print(" DAYS OVER");
+        } else {
+          lcd.print(DAYS);
+          lcd.print(" DAYS LEFT");
+        }
       } else if(i == 0) {
         int failed = 0;
         for(int i=1; i<8; i++) {
           if(ARRIVED[i] == 0) { failed = 1; break; }
         }
         if(failed == 0) {
-          SELECTED = i;
           ARRIVED[i] = 1;
           digitalWrite(LEDS[0], LOW);
-          Serial.println(DAYS);
+          Serial.println(i);
+          lcd.clear();
+          lcd.setCursor(0, 0);
+          lcd.print("LONDON");
+          lcd.setCursor(0, 1);
+          switch(SELECTED) {
+            case 1: { DAYS -= 7; break; }
+            case 2: { DAYS -= 20; break; }
+            case 3: { DAYS -= 23; break; }
+            case 4: { DAYS -= 36; break; } 
+            case 5: { DAYS -= 37; break; }
+            case 6: { DAYS -= 17; break; }
+            case 7: { DAYS -= 10; break; }
+          }
+          SELECTED = i;
+          if(DAYS < 0) {
+            lcd.print(-DAYS);
+            lcd.print(" DAYS OVER");
+          } else {
+            lcd.print(DAYS);
+            lcd.print(" DAYS LEFT");
+          }
         }
       }
       delay(1000);
